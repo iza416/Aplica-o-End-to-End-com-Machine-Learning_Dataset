@@ -54,7 +54,7 @@ Ele representa o problema de identificação em tempo real de transações fraud
 
 ### Qual é a variável-alvo (target) que será prevista?
 
-A coluna `fraud`, indicador de fraude[cite: 3].
+A coluna `fraud`, indicador de fraude.
 
 ---
 
@@ -67,13 +67,13 @@ A coluna `fraud`, indicador de fraude[cite: 3].
 
 ### Quais informações serão utilizadas como entrada do modelo?
 
-* **`distance_from_home`**: Distância (em km) entre a residência cadastrada do titular e o local da transação[cite: 1, 3].
-* **`distance_from_last_transaction`**: Distância (em km) em relação ao ponto onde a última transação foi feita[cite: 1, 3].
-* **`ratio_to_median_purchase_price`**: Razão entre o valor da compra atual e o valor mediano histórico do portador, por exemplo $ 1,0 é o gasto típico $ 10 é muito maior (dez vezes maior) do que ele gasta[cite: 1, 3, 4].
-* **`repeat_retailer`**: Indica se o cliente já comprou anteriormente naquele estabelecimento comercial[cite: 1, 3, 4].
-* **`used_chip`**: Indica se a compra usou chip físico[cite: 1, 3, 4].
-* **`used_pin_number`**: Indica se foi digitada a senha[cite: 1, 3, 4].
-* **`online_order`**: Indica se a transação ocorreu em ambiente virtual/e-commerce ou presencial[cite: 1, 3, 4].
+* **`distance_from_home`**: Distância (em km) entre a residência cadastrada do titular e o local da transação.
+* **`distance_from_last_transaction`**: Distância (em km) em relação ao ponto onde a última transação foi feita.
+* **`ratio_to_median_purchase_price`**: Razão entre o valor da compra atual e o valor mediano histórico do portador, por exemplo $ 1,0 é o gasto típico $ 10 é muito maior (dez vezes maior) do que ele gasta.
+* **`repeat_retailer`**: Indica se o cliente já comprou anteriormente naquele estabelecimento comercial.
+* **`used_chip`**: Indica se a compra usou chip físico.
+* **`used_pin_number`**: Indica se foi digitada a senha.
+* **`online_order`**: Indica se a transação ocorreu em ambiente virtual/e-commerce ou presencial.
 
 ---
 
