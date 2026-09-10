@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detecção de Fraude em Cartão</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 10px;
+        }
+        .header-box {
+            background-color: #1e293b;
+            color: #ffffff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="header-box">
+                    <h2 class="h4 mb-1"> Sistema Antifraude</h2>
+                    <p class="small text-secondary mb-0">Previsão de transações suspeitas</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form id="fraudForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold">Distância da Casa (km):</label>
+                                <input type="number" step="any" class="form-control" id="distance_from_home" value="10.5" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold">Distância da Última Compra (km):</label>
+                                <input type="number" step="any" class="form-control" id="distance_from_last_transaction" value="1.2" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label font-weight-bold">Razão sobre o Preço Mediano:</label>
+                                <input type="number" step="any" class="form-control" id="ratio_to_median_purchase_price" value="1.1" required>
+                                <div class="form-text">Exemplo: 1.0 representa valor usual; valores elevados indicam uso atípico.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold">Estabelecimento Habitual?</label>
+                                <select class="form-select" id="repeat_retailer">
+                                    <option value="1.0">Sim</option>
+                                    <option value="0.0">Não</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold">Utilizou Chip Físico?</label>
+                                <select class="form-select" id="used_chip">
+                                    <option value="1.0">Sim</option>
+                                    <option value="0.0">Não</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold">Digitou Senha?</label>
+                                <select class="form-select" id="used_pin_number">
+                                    <option value="1.0">Sim</option>
+                                    <option value="0.0">Não</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold">Tipo de Operação:</label>
+                                <select class="form-select" id="online_order">
+                                    <option value="0.0">Presencial (Maquininha)</option>
+                                    <option value="1.0">Online</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Avaliar Transação</button>
+                        </div>
+                    </form>
+
+                    <div id="resultBox" class="mt-4 p-3 rounded" style="display: none;">
+                        <h5 id="resultAction" class="mb-1"></h5>
+                        <p id="resultProb" class="fw-bold mb-1"></p>
+                        <p id="resultMsg" class="mb-0 small"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('fraudForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            distance_from_home: parseFloat(document.getElementById('distance_from_home').value),
+            distance_from_last_transaction: parseFloat(document.getElementById('distance_from_last_transaction').value),
+            ratio_to_median_purchase_price: parseFloat(document.getElementById('ratio_to_median_purchase_price').value),
+            repeat_retailer: parseFloat(document.getElementById('repeat_retailer').value),
+            used_chip: parseFloat(document.getElementById('used_chip').value),
+            used_pin_number: parseFloat(document.getElementById('used_pin_number').value),
+            online_order: parseFloat(document.getElementById('online_order').value)
+        };
+
+        const res = await fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        const box = document.getElementById('resultBox');
+        
+        box.className = 'mt-4 p-3 rounded alert alert-' + data.status_color;
+        box.style.display = 'block';
+
+        document.getElementById('resultAction').innerText = 'Decisão: ' + data.recommended_action;
+        document.getElementById('resultProb').innerText = 'Risco Calculado: ' + data.fraud_probability + '%';
+        document.getElementById('resultMsg').innerText = data.message;
+    });
+</script>
+
+</body>
+</html>
