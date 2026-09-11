@@ -20,8 +20,8 @@ features = [
     'online_order'
 ]
 
-X = df_clean[features]  # variáveis independentes
-y = df_clean['fraud']   # Target: 0 = legítima ou 1 = fraude
+X = df_clean[features]  
+y = df_clean['fraud']   
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
@@ -39,7 +39,9 @@ acc = accuracy_score(y_test, y_pred)
 print(f"Árvore treinada! Acurácia de teste: {acc * 100:.2f}%\n")
 
 print("Relatório detalhado de métricas:")
-print(classification_report(y_test, y_pred, target_names=["Legítima (0)", "Fraude (1)"]))
+relatorio = classification_report(y_test, y_pred, target_names=["Legítima (0)", "Fraude (1)"], output_dict=True)
+df_metricas = pd.DataFrame(relatorio).transpose().loc[["Legítima (0)", "Fraude (1)"]]
+print(df_metricas.round(2))
 
 model_filename = 'fraud_model.pkl'
 joblib.dump(model, model_filename)
